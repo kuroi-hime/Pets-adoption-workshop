@@ -494,3 +494,25 @@ function toggleViews() {
 
 // Ajouter un écouteur d'événement au bouton de basculement
 toggleViewBtn.addEventListener('click', toggleViews);
+
+// Fonction principale pour initialiser l'application
+function main() {
+    // Initialiser la base de données avec des données par défaut
+    initializeDB();
+    
+    // Charger les données d'animaux pour l'app
+    petData = getPetData();
+    
+    // Démarrer l'app
+    if (petData.length > 0) {
+        renderNextCard();
+    } else {
+        cardContainer.innerHTML = '<p style="text-align:center; padding: 20px;">Aucun animal à faire défiler. Ajoutez-en dans le panneau admin !</p>';
+    }
+    
+    // Préparer le tableau admin
+    renderPetTable();
+}
+
+// Démarrer l'application quand la page se charge
+main();
