@@ -212,3 +212,23 @@ function showSummary() {
         adoptedList.appendChild(adoptedCard);
     });
 }
+
+// Connecter les boutons aux fonctions
+likeBtn.addEventListener('click', () => handleAction('like'));
+skipBtn.addEventListener('click', () => handleAction('skip'));
+
+// Fonctionnalité du bouton recommencer
+document.getElementById('restart-btn').addEventListener('click', function() {
+    // Cacher le résumé
+    document.getElementById('summary').classList.add('hidden');
+    // Montrer l'application principale
+    document.getElementById('app-container').classList.remove('hidden');
+    // Réinitialiser les variables
+    adoptedPets.length = 0; // Vider le tableau des animaux adoptés
+    currentCardIndex = 0;   // Réinitialiser à la première carte
+    // Recharger les données et recommencer
+    petData = getPetData();
+    if (petData.length > 0) {
+        renderNextCard();
+    }
+});
