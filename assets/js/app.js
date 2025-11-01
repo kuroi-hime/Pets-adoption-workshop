@@ -413,3 +413,56 @@ clearFiltersBtn.addEventListener('click', () => {
     sortSelect.value = 'name-asc';
     renderPetTable();
 });
+
+/**
+ * 📊 SYSTÈME DE RENDU DE TABLEAU - Afficher les animaux dans un tableau HTML
+ * 
+ * PROBLÈME : Montrer les données d'animaux filtrées dans un format lisible
+ * SOLUTION : Générer dynamiquement des lignes de tableau HTML
+ * 
+ * FLUX LOGIQUE :
+ * 1. Obtenir les données filtrées
+ * 2. Vider le contenu existant du tableau
+ * 3. Mettre à jour l'affichage du nombre d'animaux
+ * 4. Générer du HTML pour chaque animal
+ * 5. Ajouter des boutons d'action (Éditer/Supprimer)
+ */
+function renderPetTable() {
+    const data = getFilteredPets();
+    const petTableBody = document.getElementById('pet-table-body');
+    petTableBody.innerHTML = ''; // Vider le contenu existant
+    
+    // METTRE À JOUR L'AFFICHAGE DU NOMBRE D'ANIMAUX
+    const petCount = document.getElementById('pet-count');
+    if (petCount) {
+        // Pluralisation correcte : "1 animal" vs "2 animaux"
+        petCount.textContent = `${data.length} animal${data.length !== 1 ? 'aux' : ''}`;
+    }
+
+    // GÉRER LES RÉSULTATS VIDES
+    if (data.length === 0) {
+        petTableBody.innerHTML = '<tr><td colspan="4">Aucun animal trouvé.</td></tr>';
+        return;
+    }
+
+    // GÉNÉRER LES LIGNES DU TABLEAU
+    data.forEach(pet => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${pet.name}</td>
+            <td>${pet.age}</td>
+            <td>${pet.desc}</td>
+            <td>
+                <button class="edit-btn" data-id="${pet.id}">Modifier</button>
+                <button class="delete-btn" data-id="${pet.id}">Supprimer</button>
+            </td>
+        `;
+        petTableBody.appendChild(row);
+        /*
+        ATTRIBUTS DE DONNÉES EXPLIQUÉS :
+        - data-id="${pet.id}" stocke l'ID de l'animal dans le bouton
+        - Plus tard, nous pouvons récupérer cet ID quand le bouton est cliqué
+        - Ceci connecte le bouton aux données spécifiques de l'animal
+        */
+    });
+}
