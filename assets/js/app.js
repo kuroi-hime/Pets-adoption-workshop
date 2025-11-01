@@ -386,3 +386,30 @@ function getFilteredPets() {
     
     return data;
 }
+
+// Écouteur d'événement d'entrée de recherche
+searchInput.addEventListener('input', (e) => {
+    currentFilters.search = e.target.value;
+    renderPetTable();
+});
+
+// Écouteur d'événement de filtre d'âge
+ageFilter.addEventListener('change', (e) => {
+    currentFilters.age = e.target.value;
+    renderPetTable();
+});
+
+// Écouteur d'événement de sélection de tri
+sortSelect.addEventListener('change', (e) => {
+    currentFilters.sort = e.target.value;
+    renderPetTable();
+});
+
+// Bouton effacer les filtres
+clearFiltersBtn.addEventListener('click', () => {
+    currentFilters = { search: '', age: '', sort: 'name-asc' };
+    searchInput.value = '';
+    ageFilter.value = '';
+    sortSelect.value = 'name-asc';
+    renderPetTable();
+});
