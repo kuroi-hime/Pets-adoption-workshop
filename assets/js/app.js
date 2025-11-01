@@ -286,3 +286,52 @@ function showError(errorId, input) {
     document.getElementById(errorId).classList.add('show');
     input.classList.add('error');
 }
+
+// Fonction pour gérer la soumission du formulaire
+function handleFormSubmit(e) {
+    // Empêcher la soumission par défaut du formulaire
+    e.preventDefault();
+    
+    // Valider le formulaire d'abord
+    if (!validateForm()) {
+        return; // Arrêter si la validation échoue
+    }
+
+    // Créer un objet animal à partir des données du formulaire
+    const pet = {
+        name: petNameInput.value.trim(),
+        age: parseInt(petAgeInput.value),
+        img: petImgInput.value.trim(),
+        desc: petDescInput.value.trim(),
+        id: parseInt(petIdInput.value) || Date.now() // Utiliser l'ID existant ou en créer un nouveau
+    };
+
+    // Vérifier si nous mettons à jour un animal existant ou en créons un nouveau
+    if (parseInt(petIdInput.value)) {
+        updatePet(pet); // Mettre à jour existant
+    } else {
+        addPet(pet); // Créer nouveau
+    }
+
+    // Réinitialiser le formulaire et actualiser le tableau
+    resetForm();
+    renderPetTable();
+}
+
+// Fonction pour réinitialiser le formulaire à l'état initial
+function resetForm() {
+    petForm.reset(); // Effacer tous les champs du formulaire
+    petIdInput.value = '';
+    formSubmitBtn.textContent = 'Ajouter Animal';
+    formCancelBtn.classList.add('hidden');
+    
+    // Réinitialiser le titre du formulaire
+    const formTitle = document.getElementById('form-title');
+    if (formTitle) {
+        formTitle.textContent = 'Ajouter un Nouvel Animal';
+    }
+}
+
+// Ajouter un écouteur d'événement au formulaire
+petForm.addEventListener('submit', handleFormSubmit);
+formCancelBtn.addEventListener('click', resetForm);
