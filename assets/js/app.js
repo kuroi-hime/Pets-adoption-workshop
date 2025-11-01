@@ -232,3 +232,57 @@ document.getElementById('restart-btn').addEventListener('click', function() {
         renderNextCard();
     }
 });
+
+// Obtenir les éléments du formulaire
+const petForm = document.getElementById('pet-form');
+const petIdInput = document.getElementById('pet-id');
+const petNameInput = document.getElementById('pet-name');
+const petAgeInput = document.getElementById('pet-age');
+const petImgInput = document.getElementById('pet-img');
+const petDescInput = document.getElementById('pet-desc');
+const formSubmitBtn = document.getElementById('form-submit-btn');
+const formCancelBtn = document.getElementById('form-cancel-btn');
+
+// Fonction pour valider les entrées du formulaire
+function validateForm() {
+    let isValid = true;
+    
+    // Effacer les messages d'erreur précédents
+    document.querySelectorAll('.error-message').forEach(msg => msg.classList.remove('show'));
+    document.querySelectorAll('input').forEach(input => input.classList.remove('error'));
+    
+    // Valider le nom (doit faire 2-30 caractères)
+    if (petNameInput.value.length < 2 || petNameInput.value.length > 30) {
+        showError('name-error', petNameInput);
+        isValid = false;
+    }
+    
+    // Valider l'âge (doit être 1-20)
+    const age = parseInt(petAgeInput.value);
+    if (age < 1 || age > 20) {
+        showError('age-error', petAgeInput);
+        isValid = false;
+    }
+    
+    // Valider l'URL (doit être un format d'URL valide)
+    try {
+        new URL(petImgInput.value);
+    } catch {
+        showError('img-error', petImgInput);
+        isValid = false;
+    }
+    
+    // Valider la description (doit faire 5-100 caractères)
+    if (petDescInput.value.length < 5 || petDescInput.value.length > 100) {
+        showError('desc-error', petDescInput);
+        isValid = false;
+    }
+    
+    return isValid;
+}
+
+// Fonction pour afficher un message d'erreur
+function showError(errorId, input) {
+    document.getElementById(errorId).classList.add('show');
+    input.classList.add('error');
+}
