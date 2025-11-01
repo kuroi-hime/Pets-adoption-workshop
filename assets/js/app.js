@@ -466,3 +466,31 @@ function renderPetTable() {
         */
     });
 }
+
+// Fonction pour basculer entre les vues app et admin
+function toggleViews() {
+    const isAdminView = !adminView.classList.contains('hidden');
+    
+    if (isAdminView) {
+        // Basculer vers la vue app
+        adminView.classList.add('hidden');
+        appView.classList.remove('hidden');
+        toggleViewBtn.textContent = 'Gérer les Animaux';
+        // Redémarrer l'app avec des données fraîches
+        petData = getPetData();
+        currentCardIndex = 0;
+        adoptedPets.length = 0;
+        if (petData.length > 0) {
+            renderNextCard();
+        }
+    } else {
+        // Basculer vers la vue admin
+        adminView.classList.remove('hidden');
+        appView.classList.add('hidden');
+        toggleViewBtn.textContent = 'Voir l\'App ❤️';
+        renderPetTable();
+    }
+}
+
+// Ajouter un écouteur d'événement au bouton de basculement
+toggleViewBtn.addEventListener('click', toggleViews);
