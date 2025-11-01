@@ -335,3 +335,54 @@ function resetForm() {
 // Ajouter un écouteur d'événement au formulaire
 petForm.addEventListener('submit', handleFormSubmit);
 formCancelBtn.addEventListener('click', resetForm);
+
+// Obtenir les éléments de filtre
+const searchInput = document.getElementById('search-input');
+const ageFilter = document.getElementById('age-filter');
+const sortSelect = document.getElementById('sort-select');
+const clearFiltersBtn = document.getElementById('clear-filters');
+
+// Objet pour stocker les paramètres de filtre actuels
+let currentFilters = {
+    search: '',
+    age: '',
+    sort: 'name-asc'
+};
+
+// Fonction pour obtenir les données d'animaux filtrées et triées
+function getFilteredPets() {
+    let data = getPetData();
+    
+    // Appliquer le filtre de recherche
+    if (currentFilters.search) {
+        const searchTerm = currentFilters.search.toLowerCase();
+        data = data.filter(pet => 
+            pet.name.toLowerCase().includes(searchTerm) || 
+            pet.desc.toLowerCase().includes(searchTerm)
+        );
+    }
+    
+    // Appliquer le filtre d'âge
+    if (currentFilters.age) {
+        if (currentFilters.age === '4') {
+            // 4+ ans
+            data = data.filter(pet => pet.age >= 4);
+        } else {
+            // Correspondance d'âge exacte
+            data = data.filter(pet => pet.age == currentFilters.age);
+        }
+    }
+    
+    // Appliquer le tri
+    data.sort((a, b) => {
+        switch (currentFilters.sort) {
+            case 'name-asc': return a.name.localeCompare(b.name);
+            case 'name-desc': return b.name.localeCompare(a.name);
+            case 'age-asc': return a.age - b.age;
+            case 'age-desc': return b.age - a.age;
+            default: return 0;
+        }
+    });
+    
+    return data;
+}
