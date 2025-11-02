@@ -628,3 +628,20 @@ petTableBody.addEventListener('click', (e) => {
         document.getElementById(errorId).classList.remove('show');
     });
 });
+
+// Fonction principale pour initialiser l'application
+function main() {
+    initializeDB();
+    petData = getPetData();
+    
+    if (petData.length > 0) {
+        renderNextCard();
+    } else {
+        cardContainer.innerHTML = '<p style="text-align:center; padding: 20px;">Aucun animal à faire défiler. Ajoutez-en dans le panneau admin !</p>';
+    }
+    
+    renderPetTable();
+}
+
+// Démarrer l'application
+main();
