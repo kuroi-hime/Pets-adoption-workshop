@@ -575,3 +575,56 @@ function dragEnd() {
     deltaX = 0;
     startX = 0;
 }
+
+// Fonction pour gérer l'édition d'un animal
+function handleEditClick(petId) {
+    const data = getPetData();
+    const petToEdit = data.find(pet => pet.id === petId);
+    if (!petToEdit) return;
+
+    petIdInput.value = petToEdit.id;
+    petNameInput.value = petToEdit.name;
+    petAgeInput.value = petToEdit.age;
+    petImgInput.value = petToEdit.img;
+    petDescInput.value = petToEdit.desc;
+
+    formSubmitBtn.textContent = 'Mettre à jour Animal';
+    formCancelBtn.classList.remove('hidden');
+    
+    const formTitle = document.getElementById('form-title');
+    if (formTitle) {
+        formTitle.textContent = 'Modifier Animal';
+    }
+    
+    window.scrollTo(0, 0);
+}
+
+// Fonction pour gérer la suppression d'un animal
+function handleDeleteClick(petId) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet animal ?')) {
+        deletePet(petId);
+        renderPetTable();
+    }
+}
+
+// Écouteur d'événement pour les boutons du tableau
+const petTableBody = document.getElementById('pet-table-body');
+petTableBody.addEventListener('click', (e) => {
+    const petId = parseInt(e.target.dataset.id);
+    if (e.target.classList.contains('edit-btn')) {
+        handleEditClick(petId);
+    }
+    if (e.target.classList.contains('delete-btn')) {
+        handleDeleteClick(petId);
+    }
+});
+
+// Validation de formulaire en temps réel
+[petNameInput, petAgeInput, petImgInput, petDescInput].forEach(input => {
+    input.addEventListener('blur', validateForm);
+    input.addEventListener('input', () => {
+        input.classList.remove('error');
+        const errorId = input.id + '-error';
+        document.getElementById(errorId).classList.remove('show');
+    });
+});
