@@ -516,3 +516,62 @@ function main() {
 
 // Démarrer l'application quand la page se charge
 main();
+
+// Variables pour la fonctionnalité de glissement
+let isDragging = false;
+let startX = 0;
+let deltaX = 0;
+let currentCard = null;
+
+// Fonction pour commencer le glissement
+function dragStart(e) {
+    if (!currentCard) return;
+    isDragging = true;
+    startX = e.pageX || e.touches[0].pageX;
+    currentCard = e.target.closest('.pet-card');
+    currentCard.classList.add('dragging');
+    document.addEventListener('mousemove', dragging);
+    document.addEventListener('touchmove', dragging, { passive: false });
+    document.addEventListener('mouseup', dragEnd);
+    document.addEventListener('touchend', dragEnd);
+}
+
+// Fonction pendant le glissement
+function dragging(e) {
+    if (!isDragging || !currentCard) return;
+    e.preventDefault();
+    const currentX = e.pageX || e.touches[0].pageX;
+    deltaX = currentX - startX;
+    if (deltaX === 0) return;
+    const rotation = deltaX / 10;
+    currentCard.style.transform = `translateX(${deltaX}px) rotate(${rotation}deg)`;
+    
+    // Retour visuel
+    const opacity = Math.max(0.3, 1 - Math.abs(deltaX) / 300);
+    currentCard.style.opacity = opacity;
+}
+
+// Fonction pour terminer le glissement
+function dragEnd() {
+    if (!isDragging || !currentCard) return;
+    isDragging = false;
+    const threshold = 100;
+    
+    if (deltaX > threshold) {
+        handleAction('like');
+    } else if (deltaX < -threshold) {
+        handleAction('skip');
+    } else {
+        // Retour à la position
+        currentCard.classList.remove('dragging');
+        currentCard.style.transform = 'translateX(0) rotate(0deg)';
+        currentCard.style.opacity = '1';
+    }
+    
+    document.removeEventListener('mousemove', dragging);
+    document.removeEventListener('touchmove', dragging);
+    document.removeEventListener('mouseup', dragEnd);
+    document.removeEventListener('touchend', dragEnd);
+    deltaX = 0;
+    startX = 0;
+}
